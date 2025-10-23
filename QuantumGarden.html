@@ -1,0 +1,2321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Garden | Jardim Quântico</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2E7D32;
+            --primary-dark: #1B5E20;
+            --primary-light: #4CAF50;
+            --secondary: #7E57C2;
+            --secondary-dark: #5E35B1;
+            --accent: #26A69A;
+            --accent-light: #4DB6AC;
+            --dark: #1A237E;
+            --light: #E8F5E9;
+            --rare: #EC407A;
+            --epic: #AB47BC;
+            --legendary: #FFA000;
+            --mythic: #FF5722;
+            --background: radial-gradient(circle at top, #1a2a6c, #0d1b2a);
+            --card-bg: rgba(16, 20, 31, 0.8);
+            --card-border: rgba(255, 255, 255, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: var(--background);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            padding-bottom: 100px; /* Espaço para o banner */
+        }
+        
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -2;
+        }
+        
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 5s infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        
+        .quantum-field {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        .quantum-wave {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(38, 166, 154, 0.3);
+            animation: wave 8s infinite linear;
+        }
+        
+        @keyframes wave {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(4); opacity: 0; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(38, 166, 154, 0.5));
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(38, 166, 154, 0.3);
+        }
+        
+        .player-stats {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+        }
+        
+        .stat i {
+            color: var(--accent);
+        }
+        
+        .stat-value {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+        }
+        
+        .garden-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .garden-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to right, var(--accent), var(--secondary));
+        }
+        
+        .garden-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .garden-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .garden-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(to right, var(--secondary), var(--secondary-dark));
+        }
+        
+        .btn-accent {
+            background: linear-gradient(to right, var(--accent), #00897B);
+        }
+        
+        .btn-rare {
+            background: linear-gradient(to right, var(--rare), #D81B60);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn:disabled:hover {
+            transform: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .garden-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+        
+        .plot {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+        }
+        
+        .plot:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .plot.empty {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .plot.empty:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .plot.empty::before {
+            content: '+';
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .plot.empty::after {
+            content: 'Plantar';
+            position: absolute;
+            bottom: 20px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .plant {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3));
+            transition: all 0.5s;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .plant.growing {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .superposition {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .superposition::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        .plant-name {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 0 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 5px 10px;
+            z-index: 2;
+            position: relative;
+        }
+        
+        .timer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 2;
+        }
+        
+        .rarity-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            z-index: 2;
+        }
+        
+        .common { background: rgba(255, 255, 255, 0.2); }
+        .rare { background: var(--rare); }
+        .epic { background: var(--epic); }
+        .legendary { background: var(--legendary); }
+        .mythic { background: var(--mythic); }
+        
+        .quantum-effects {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: 1;
+        }
+        
+        .quantum-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: quantum-float 3s infinite;
+        }
+        
+        @keyframes quantum-float {
+            0%, 100% { transform: translate(0, 0); opacity: 0; }
+            50% { opacity: 1; }
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, var(--accent), var(--secondary));
+            border-radius: 10px;
+            width: 30%;
+            transition: width 0.5s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: progress-shine 2s infinite;
+        }
+        
+        @keyframes progress-shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .level-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .sidebar-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to right, var(--accent), var(--secondary));
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .quest-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .quest {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        
+        .quest:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .quest-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        
+        .quest-info {
+            flex: 1;
+        }
+        
+        .quest-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .quest-reward {
+            font-size: 0.8rem;
+            color: var(--accent-light);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .collection-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .collection-stat {
+            text-align: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .collection-progress {
+            margin-top: 15px;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            width: 90%;
+            max-width: 600px;
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+            animation: modalAppear 0.5s;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+        
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, var(--accent), var(--secondary));
+        }
+        
+        @keyframes modalAppear {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.7);
+            transition: color 0.3s;
+            z-index: 1;
+        }
+        
+        .close-modal:hover {
+            color: white;
+        }
+        
+        .modal-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-align: center;
+            background: linear-gradient(to right, var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .shop-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .shop-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .shop-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s;
+        }
+        
+        .shop-item:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .shop-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+        
+        .shop-item.rare {
+            border: 2px solid var(--rare);
+        }
+        
+        .shop-item.epic {
+            border: 2px solid var(--epic);
+        }
+        
+        .shop-item.legendary {
+            border: 2px solid var(--legendary);
+        }
+        
+        .item-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .item-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .item-price {
+            color: var(--accent);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .item-description {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        
+        .discovery-content {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .discovery-plant {
+            font-size: 6rem;
+            margin: 20px 0;
+            animation: discoveryPulse 2s infinite;
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.3));
+        }
+        
+        @keyframes discoveryPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        .discovery-name {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .discovery-rarity {
+            padding: 5px 15px;
+            border-radius: 15px;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .ad-container {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .ad-simulation {
+            height: 100px;
+            background: linear-gradient(45deg, #ff6b6b, #ffa500);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ad-simulation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: 0.5s;
+        }
+        
+        .ad-simulation:hover::before {
+            left: 100%;
+        }
+        
+        .ad-simulation:hover {
+            transform: scale(1.02);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(150%);
+            transition: transform 0.5s;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+            border-left: 4px solid var(--accent);
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .quantum-theory {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .theory-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--accent);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        .upgrade-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--rare);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        
+        .price-increase {
+            font-size: 0.7rem;
+            color: var(--accent-light);
+            margin-top: 3px;
+        }
+        
+        /* Anúncios */
+        .ad-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            z-index: 999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 60px;
+        }
+        
+        .ad-banner-content {
+            background: linear-gradient(45deg, #4a6572, #344955);
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .ad-interstitial {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .ad-interstitial-content {
+            background: white;
+            color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 90%;
+            max-height: 80%;
+            overflow-y: auto;
+        }
+        
+        .ad-interstitial-content h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .ad-interstitial-content p {
+            margin-bottom: 20px;
+        }
+        
+        .ad-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .ad-app-open {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--background);
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .ad-app-open-content {
+            padding: 30px;
+            max-width: 90%;
+        }
+        
+        .ad-app-open h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .ad-app-open p {
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .loading-bar {
+            width: 200px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        
+        .loading-progress {
+            height: 100%;
+            background: linear-gradient(to right, var(--accent), var(--secondary));
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 968px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .garden-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .garden-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .garden-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .garden-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .btn {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .logo-text {
+                font-size: 1.5rem;
+            }
+            
+            .logo-icon {
+                font-size: 2rem;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .sidebar-card {
+                padding: 15px;
+            }
+            
+            .modal-content {
+                padding: 20px;
+            }
+            
+            .shop-items {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .garden-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .shop-items {
+                grid-template-columns: 1fr;
+            }
+            
+            .collection-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .garden-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .garden-container {
+                padding: 15px;
+            }
+            
+            .plant {
+                font-size: 3rem;
+            }
+            
+            .discovery-plant {
+                font-size: 4rem;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .logo-text {
+                font-size: 1.3rem;
+            }
+            
+            .stat {
+                padding: 6px 12px;
+            }
+            
+            .garden-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Anúncio de Abertura (App Open Ad) -->
+    <div class="ad-app-open" id="app-open-ad">
+        <div class="ad-app-open-content">
+            <h2>Quantum Garden</h2>
+            <p>Carregando seu jardim quântico...</p>
+            <div class="loading-bar">
+                <div class="loading-progress" id="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Anúncio Intersticial -->
+    <div class="ad-interstitial" id="interstitial-ad">
+        <button class="ad-close" id="close-interstitial">×</button>
+        <div class="ad-interstitial-content">
+            <h3>Anúncio Intersticial</h3>
+            <p>Este é um anúncio intersticial simulado. Em um aplicativo real, este seria um anúncio do AdMob.</p>
+            <p>ID da unidade: ca-app-pub-9180380185510662/1147143908</p>
+            <button class="btn btn-accent" id="continue-after-ad">Continuar</button>
+        </div>
+    </div>
+
+    <!-- Banner de Anúncio -->
+    <div class="ad-banner" id="banner-ad">
+        <div class="ad-banner-content">
+            Anúncio Banner - ID: ca-app-pub-9180380185510662/5008892514
+        </div>
+    </div>
+
+    <div class="stars" id="stars"></div>
+    <div class="quantum-field" id="quantum-field"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-atom"></i></div>
+                <div class="logo-text">Quantum Garden</div>
+            </div>
+            <div class="player-stats">
+                <div class="stat">
+                    <i class="fas fa-seedling"></i>
+                    <span class="stat-value" id="plant-count">0</span>
+                </div>
+                <div class="stat">
+                    <i class="fas fa-award"></i>
+                    <span class="stat-value" id="species-count">0</span>
+                </div>
+                <div class="stat">
+                    <i class="fas fa-coins"></i>
+                    <span class="stat-value" id="quantum-coins">200</span>
+                </div>
+                <div class="stat">
+                    <i class="fas fa-user"></i>
+                    <span class="stat-value" id="player-level">1</span>
+                </div>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <div class="garden-container">
+                <div class="garden-header">
+                    <div class="garden-title">Seu Jardim Quântico</div>
+                    <div class="garden-controls">
+                        <button class="btn" id="shop-btn">
+                            <i class="fas fa-store"></i> Loja
+                        </button>
+                        <button class="btn btn-secondary" id="accelerate-btn">
+                            <i class="fas fa-bolt"></i> Acelerar
+                        </button>
+                        <button class="btn btn-accent" id="expand-btn">
+                            <i class="fas fa-expand"></i> Expandir
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress" id="level-progress"></div>
+                </div>
+                <div class="level-info">
+                    <span>Nível <span id="current-level">1</span></span>
+                    <span><span id="current-xp">0</span>/<span id="next-level-xp">100</span> XP</span>
+                </div>
+                
+                <div class="garden-grid" id="garden">
+                    <!-- Plots will be generated here -->
+                </div>
+                
+                <div class="quantum-theory">
+                    <div class="theory-title">Princípio da Incerteza de Heisenberg</div>
+                    <p>Suas plantas existem em superposição quântica quando não observadas. Ao retornar ao jardim, elas colapsam para um estado definido, revelando sua forma final!</p>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <div class="sidebar-card">
+                    <h3 class="card-title"><i class="fas fa-tasks"></i> Missões Diárias</h3>
+                    <div class="quest-list" id="quest-list">
+                        <!-- Quests will be generated here -->
+                    </div>
+                </div>
+                
+                <div class="sidebar-card">
+                    <h3 class="card-title"><i class="fas fa-book"></i> Coleção</h3>
+                    <div class="collection-stats">
+                        <div class="collection-stat">
+                            <div class="stat-number" id="common-count">0</div>
+                            <div class="stat-label">Comuns</div>
+                        </div>
+                        <div class="collection-stat">
+                            <div class="stat-number" id="rare-count">0</div>
+                            <div class="stat-label">Raras</div>
+                        </div>
+                        <div class="collection-stat">
+                            <div class="stat-number" id="epic-count">0</div>
+                            <div class="stat-label">Épicas</div>
+                        </div>
+                        <div class="collection-stat">
+                            <div class="stat-number" id="legendary-count">0</div>
+                            <div class="stat-label">Lendárias</div>
+                        </div>
+                    </div>
+                    <div class="collection-progress">
+                        <div class="progress-label">
+                            <span>Progresso da Coleção</span>
+                            <span id="collection-percent">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress" id="collection-progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-card">
+                    <h3 class="card-title"><i class="fas fa-rocket"></i> Melhorias</h3>
+                    <div class="quest-list">
+                        <div class="quest">
+                            <div class="quest-icon"><i class="fas fa-microscope"></i></div>
+                            <div class="quest-info">
+                                <div class="quest-name">Microscópio Quântico</div>
+                                <div class="quest-reward"><i class="fas fa-coins"></i> +15% mutação</div>
+                            </div>
+                            <div class="upgrade-badge" id="microscope-badge">✓</div>
+                        </div>
+                        <div class="quest">
+                            <div class="quest-icon"><i class="fas fa-flask"></i></div>
+                            <div class="quest-info">
+                                <div class="quest-name">Fertilizante Exótico</div>
+                                <div class="quest-reward"><i class="fas fa-coins"></i> -30% tempo</div>
+                            </div>
+                            <div class="upgrade-badge" id="fertilizer-badge">✓</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            Quantum Garden &copy; 2023 - Um experimento quântico interativo
+        </footer>
+    </div>
+    
+    <!-- Shop Modal -->
+    <div class="modal" id="shop-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-shop">&times;</span>
+            <h2 class="modal-title">Loja Quântica</h2>
+            
+            <div class="ad-container">
+                <div class="ad-simulation" id="watch-ad">
+                    <i class="fas fa-tv"></i> Assista a um anúncio para ganhar 25 Quantum Coins!
+                </div>
+            </div>
+            
+            <div class="shop-items" id="shop-items">
+                <!-- Shop items will be generated here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Discovery Modal -->
+    <div class="modal" id="discovery-modal">
+        <div class="modal-content">
+            <div class="discovery-content">
+                <h2 class="modal-title">Nova Descoberta Quântica!</h2>
+                <div class="discovery-plant" id="discovery-plant"><i class="fas fa-seedling"></i></div>
+                <div class="discovery-name" id="discovery-name">Planta Quântica</div>
+                <div class="discovery-rarity rare" id="discovery-rarity">Rara</div>
+                <p id="discovery-description">Esta planta exibe propriedades quânticas únicas quando observada.</p>
+                <p id="discovery-reward" style="margin-top: 10px; color: var(--accent-light);"></p>
+                <button class="btn btn-accent" id="close-discovery" style="margin-top: 20px;">
+                    <i class="fas fa-check"></i> Continuar
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <i class="fas fa-seedling"></i>
+        <div class="notification-text">Nova planta disponível para observação!</div>
+    </div>
+
+    <script>
+        // IDs dos anúncios do AdMob (simulação)
+        const ADMOB_IDS = {
+            APP_ID: 'ca-app-pub-9180380185510662~4428693611',
+            INTERSTITIAL: 'ca-app-pub-9180380185510662/9411171958',
+            BANNER: 'ca-app-pub-9180380185510662/6937051857',
+            APP_OPEN: 'ca-app-pub-9180380185510662/4015375045'
+        };
+
+        // Game state
+        const gameState = {
+            plants: [],
+            plots: 6,
+            maxPlots: 12,
+            quantumCoins: 200,
+            discoveredSpecies: [],
+            hasMicroscope: false,
+            hasFertilizer: false,
+            adsRemoved: false,
+            lastVisit: Date.now(),
+            playerLevel: 1,
+            playerXP: 0,
+            xpToNextLevel: 100,
+            completedQuests: [],
+            dailyQuests: generateDailyQuests(),
+            collection: {
+                common: 0,
+                rare: 0,
+                epic: 0,
+                legendary: 0,
+                mythic: 0
+            },
+            // Track purchases for progressive pricing
+            purchaseCount: {
+                'common-seed': 0,
+                'rare-seed': 0,
+                'epic-seed': 0,
+                'microscope': 0,
+                'fertilizer': 0,
+                'expand': 0,
+                'no-ads': 0
+            }
+        };
+        
+        // Plant types and their properties with FontAwesome icons
+        const plantTypes = {
+            common: {
+                name: "Planta Quântica",
+                baseTime: 120, // seconds
+                icons: ["fas fa-seedling", "fas fa-leaf", "fas fa-sprout", "fas fa-tree"],
+                finalIcons: ["fas fa-seedling", "fas fa-leaf", "fas fa-sprout", "fas fa-tree"],
+                rarity: "common",
+                description: "Uma planta comum com propriedades quânticas básicas."
+            },
+            rare: {
+                name: "Planta Exótica",
+                baseTime: 300, // seconds
+                icons: ["fas fa-feather-alt", "fas fa-feather", "fas fa-pagelines", "fas fa-spa"],
+                finalIcons: ["fas fa-feather-alt", "fas fa-feather", "fas fa-pagelines", "fas fa-spa"],
+                rarity: "rare",
+                description: "Esta planta exibe propriedades quânticas interessantes quando observada."
+            },
+            epic: {
+                name: "Planta Épica",
+                baseTime: 600, // seconds
+                icons: ["fas fa-atom", "fas fa-meteor", "fas fa-radiation", "fas fa-fire"],
+                finalIcons: ["fas fa-atom", "fas fa-meteor", "fas fa-radiation", "fas fa-fire"],
+                rarity: "epic",
+                description: "Uma planta com propriedades quânticas avançadas e raras."
+            },
+            // Mutations that can occur
+            mutations: [
+                { 
+                    name: "Flor de Schrödinger", 
+                    icon: "fas fa-question-circle", 
+                    rarity: "legendary",
+                    description: "Existe simultaneamente em todos os estados possíveis até ser observada."
+                },
+                { 
+                    name: "Lírio Quântico", 
+                    icon: "fas fa-bolt", 
+                    rarity: "epic",
+                    description: "Emite partículas de luz quando colapsa de superposição."
+                },
+                { 
+                    name: "Rosa de Heisenberg", 
+                    icon: "fas fa-rose", 
+                    rarity: "epic",
+                    description: "Sua posição e momentum nunca podem ser conhecidos simultaneamente."
+                },
+                { 
+                    name: "Samambaia de Planck", 
+                    icon: "fas fa-feather", 
+                    rarity: "rare",
+                    description: "Emite energia em pacotes discretos quando observada."
+                },
+                { 
+                    name: "Cacto de Bohr", 
+                    icon: "fas fa-cactus", 
+                    rarity: "rare",
+                    description: "Só existe em estados de energia específicos e discretos."
+                },
+                { 
+                    name: "Orquídea de Einstein", 
+                    icon: "fas fa-infinity", 
+                    rarity: "epic",
+                    description: "Desafia o princípio de localidade com emaranhamento quântico."
+                },
+                { 
+                    name: "Hortênsia de Higgs", 
+                    icon: "fas fa-weight-hanging", 
+                    rarity: "legendary",
+                    description: "Adquire massa através do campo quântico de Higgs."
+                },
+                { 
+                    name: "Lótus de Fermi", 
+                    icon: "fas fa-circle", 
+                    rarity: "mythic",
+                    description: "Exibe estatísticas quânticas exclusivas de férmions."
+                },
+                { 
+                    name: "Margarida de Bose", 
+                    icon: "fas fa-circle-notch", 
+                    rarity: "mythic",
+                    description: "Exibe estatísticas quânticas exclusivas de bósons."
+                }
+            ]
+        };
+        
+        // Shop items with base prices and progressive pricing formulas
+        const shopItems = [
+            {
+                id: 'common-seed',
+                name: 'Semente Comum',
+                icon: 'fas fa-seedling',
+                basePrice: 20,
+                priceFormula: (count) => Math.floor(20 * Math.pow(1.2, count)),
+                description: 'Cresce em 2-5 minutos',
+                rarity: 'common'
+            },
+            {
+                id: 'rare-seed',
+                name: 'Semente Rara',
+                icon: 'fas fa-feather-alt',
+                basePrice: 75,
+                priceFormula: (count) => Math.floor(75 * Math.pow(1.3, count)),
+                description: 'Alta chance de mutação',
+                rarity: 'rare'
+            },
+            {
+                id: 'epic-seed',
+                name: 'Semente Épica',
+                icon: 'fas fa-atom',
+                basePrice: 200,
+                priceFormula: (count) => Math.floor(200 * Math.pow(1.4, count)),
+                description: 'Chance de espécies lendárias',
+                rarity: 'epic'
+            },
+            {
+                id: 'microscope',
+                name: 'Microscópio',
+                icon: 'fas fa-microscope',
+                basePrice: 150,
+                priceFormula: (count) => count > 0 ? 0 : 150, // One-time purchase
+                description: '+15% chance de mutação',
+                rarity: 'epic'
+            },
+            {
+                id: 'fertilizer',
+                name: 'Fertilizante',
+                icon: 'fas fa-flask',
+                basePrice: 100,
+                priceFormula: (count) => Math.floor(100 * Math.pow(1.25, count)),
+                description: 'Acelera crescimento em 30%',
+                rarity: 'legendary'
+            },
+            {
+                id: 'expand',
+                name: 'Expandir Jardim',
+                icon: 'fas fa-expand-arrows-alt',
+                basePrice: 200,
+                priceFormula: (count) => Math.floor(200 * Math.pow(1.5, count)),
+                description: '+2 espaços para plantas',
+                rarity: 'common'
+            },
+            {
+                id: 'no-ads',
+                name: 'Remover Anúncios',
+                icon: 'fas fa-times-circle',
+                basePrice: 500,
+                priceFormula: (count) => count > 0 ? 0 : 500, // One-time purchase
+                description: 'Jogue sem interrupções',
+                rarity: 'legendary'
+            }
+        ];
+        
+        // Daily quests
+        function generateDailyQuests() {
+            return [
+                {
+                    id: 1,
+                    name: "Primeiros Passos",
+                    description: "Plante 3 sementes",
+                    reward: 50,
+                    progress: 0,
+                    goal: 3,
+                    completed: false
+                },
+                {
+                    id: 2,
+                    name: "Observador Atento",
+                    description: "Observe 5 plantas",
+                    reward: 75,
+                    progress: 0,
+                    goal: 5,
+                    completed: false
+                },
+                {
+                    id: 3,
+                    name: "Colecionador Iniciante",
+                    description: "Descubra 2 novas espécies",
+                    reward: 100,
+                    progress: 0,
+                    goal: 2,
+                    completed: false
+                }
+            ];
+        }
+        
+        // DOM elements
+        const gardenElement = document.getElementById('garden');
+        const shopModal = document.getElementById('shop-modal');
+        const discoveryModal = document.getElementById('discovery-modal');
+        const shopBtn = document.getElementById('shop-btn');
+        const closeShop = document.getElementById('close-shop');
+        const closeDiscovery = document.getElementById('close-discovery');
+        const accelerateBtn = document.getElementById('accelerate-btn');
+        const expandBtn = document.getElementById('expand-btn');
+        const plantCountElement = document.getElementById('plant-count');
+        const speciesCountElement = document.getElementById('species-count');
+        const quantumCoinsElement = document.getElementById('quantum-coins');
+        const playerLevelElement = document.getElementById('player-level');
+        const currentLevelElement = document.getElementById('current-level');
+        const currentXPElement = document.getElementById('current-xp');
+        const nextLevelXPElement = document.getElementById('next-level-xp');
+        const levelProgressElement = document.getElementById('level-progress');
+        const discoveryPlantElement = document.getElementById('discovery-plant');
+        const discoveryNameElement = document.getElementById('discovery-name');
+        const discoveryRarityElement = document.getElementById('discovery-rarity');
+        const discoveryDescriptionElement = document.getElementById('discovery-description');
+        const discoveryRewardElement = document.getElementById('discovery-reward');
+        const watchAdButton = document.getElementById('watch-ad');
+        const notification = document.getElementById('notification');
+        const questListElement = document.getElementById('quest-list');
+        const commonCountElement = document.getElementById('common-count');
+        const rareCountElement = document.getElementById('rare-count');
+        const epicCountElement = document.getElementById('epic-count');
+        const legendaryCountElement = document.getElementById('legendary-count');
+        const collectionPercentElement = document.getElementById('collection-percent');
+        const collectionProgressElement = document.getElementById('collection-progress');
+        const microscopeBadge = document.getElementById('microscope-badge');
+        const fertilizerBadge = document.getElementById('fertilizer-badge');
+        const shopItemsElement = document.getElementById('shop-items');
+        
+        // Ad elements
+        const appOpenAd = document.getElementById('app-open-ad');
+        const interstitialAd = document.getElementById('interstitial-ad');
+        const bannerAd = document.getElementById('banner-ad');
+        const closeInterstitial = document.getElementById('close-interstitial');
+        const continueAfterAd = document.getElementById('continue-after-ad');
+        const loadingProgress = document.getElementById('loading-progress');
+        
+        // Ad state
+        let interstitialShown = false;
+        let appOpenShown = false;
+
+        // Initialize the game
+        function initGame() {
+            // Show app open ad first
+            showAppOpenAd();
+            
+            createStars();
+            createQuantumField();
+            loadGameState();
+            setupEventListeners();
+            
+            // After app open ad, initialize the rest of the game
+            setTimeout(() => {
+                renderGarden();
+                updateStats();
+                renderQuests();
+                renderShopItems();
+                checkVisibilityChanges();
+                
+                // Check for plants that evolved while away
+                checkForEvolvedPlants();
+            }, 3500);
+        }
+        
+        // Show app open ad
+        function showAppOpenAd() {
+            if (appOpenShown || gameState.adsRemoved) return;
+            
+            appOpenAd.style.display = 'flex';
+            appOpenShown = true;
+            
+            // Simulate loading progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 5;
+                loadingProgress.style.width = `${progress}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        appOpenAd.style.display = 'none';
+                    }, 500);
+                }
+            }, 100);
+        }
+        
+        // Show interstitial ad
+        function showInterstitialAd() {
+            if (interstitialShown || gameState.adsRemoved) return false;
+            
+            interstitialAd.style.display = 'flex';
+            interstitialShown = true;
+            return true;
+        }
+        
+        // Hide interstitial ad
+        function hideInterstitialAd() {
+            interstitialAd.style.display = 'none';
+        }
+        
+        // Create background stars
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 150;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = `${Math.random() * 3}px`;
+                star.style.height = star.style.width;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // Create quantum field effects
+        function createQuantumField() {
+            const fieldContainer = document.getElementById('quantum-field');
+            
+            for (let i = 0; i < 5; i++) {
+                const wave = document.createElement('div');
+                wave.className = 'quantum-wave';
+                wave.style.left = `${Math.random() * 100}%`;
+                wave.style.top = `${Math.random() * 100}%`;
+                wave.style.animationDelay = `${Math.random() * 8}s`;
+                fieldContainer.appendChild(wave);
+            }
+        }
+        
+        // Load game state from localStorage
+        function loadGameState() {
+            const savedState = localStorage.getItem('quantumGarden');
+            if (savedState) {
+                const parsed = JSON.parse(savedState);
+                Object.assign(gameState, parsed);
+                
+                // Convert string dates back to numbers
+                gameState.plants.forEach(plant => {
+                    if (plant.plantedAt) plant.plantedAt = Number(plant.plantedAt);
+                });
+                
+                gameState.lastVisit = Number(gameState.lastVisit);
+            }
+        }
+        
+        // Save game state to localStorage
+        function saveGameState() {
+            localStorage.setItem('quantumGarden', JSON.stringify(gameState));
+        }
+        
+        // Render the garden plots
+        function renderGarden() {
+            gardenElement.innerHTML = '';
+            
+            for (let i = 0; i < gameState.plots; i++) {
+                const plot = document.createElement('div');
+                plot.className = 'plot';
+                plot.dataset.index = i;
+                
+                if (i < gameState.plants.length) {
+                    const plant = gameState.plants[i];
+                    const timePassed = Math.floor((Date.now() - plant.plantedAt) / 1000);
+                    const timeRequired = plant.timeRequired;
+                    
+                    // Add quantum effects
+                    const quantumEffects = document.createElement('div');
+                    quantumEffects.className = 'quantum-effects';
+                    
+                    // Create quantum particles
+                    for (let j = 0; j < 8; j++) {
+                        const particle = document.createElement('div');
+                        particle.className = 'quantum-particle';
+                        particle.style.left = `${Math.random() * 100}%`;
+                        particle.style.top = `${Math.random() * 100}%`;
+                        particle.style.animationDelay = `${Math.random() * 3}s`;
+                        quantumEffects.appendChild(particle);
+                    }
+                    
+                    plot.appendChild(quantumEffects);
+                    
+                    if (timePassed >= timeRequired) {
+                        // Plant is ready to be observed
+                        plot.classList.add('superposition');
+                        quantumEffects.style.opacity = '1';
+                        
+                        plot.innerHTML += `
+                            <div class="plant"><i class="fas fa-question-circle"></i></div>
+                            <div class="plant-name">Pronta para observação!</div>
+                            <div class="rarity-badge ${plant.rarity}">${plant.rarity}</div>
+                        `;
+                    } else {
+                        // Plant is still growing
+                        const remainingTime = timeRequired - timePassed;
+                        const minutes = Math.floor(remainingTime / 60);
+                        const seconds = remainingTime % 60;
+                        
+                        plot.classList.add('growing');
+                        plot.innerHTML += `
+                            <div class="plant"><i class="${plant.icon}"></i></div>
+                            <div class="plant-name">${plant.name}</div>
+                            <div class="timer"><i class="fas fa-clock"></i> ${minutes}:${seconds.toString().padStart(2, '0')}</div>
+                            <div class="rarity-badge ${plant.rarity}">${plant.rarity}</div>
+                        `;
+                    }
+                } else {
+                    plot.classList.add('empty');
+                    plot.innerHTML = `<div>Espaço Vazio</div>`;
+                }
+                
+                plot.addEventListener('click', () => handlePlotClick(i));
+                gardenElement.appendChild(plot);
+            }
+        }
+        
+        // Render shop items with progressive pricing
+        function renderShopItems() {
+            shopItemsElement.innerHTML = '';
+            
+            shopItems.forEach(item => {
+                const purchaseCount = gameState.purchaseCount[item.id] || 0;
+                const currentPrice = item.priceFormula(purchaseCount);
+                const nextPrice = item.priceFormula(purchaseCount + 1);
+                
+                const shopItem = document.createElement('div');
+                shopItem.className = `shop-item ${item.rarity}`;
+                shopItem.dataset.item = item.id;
+                shopItem.dataset.cost = currentPrice;
+                
+                let priceIncreaseText = '';
+                if (nextPrice > currentPrice && currentPrice > 0) {
+                    const increase = nextPrice - currentPrice;
+                    priceIncreaseText = `<div class="price-increase">+${increase} na próxima</div>`;
+                }
+                
+                shopItem.innerHTML = `
+                    <div class="item-icon"><i class="${item.icon}"></i></div>
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-price"><i class="fas fa-coins"></i> ${currentPrice > 0 ? currentPrice : 'VENDIDO'}</div>
+                    ${priceIncreaseText}
+                    <div class="item-description">${item.description}</div>
+                `;
+                
+                shopItemsElement.appendChild(shopItem);
+            });
+        }
+        
+        // Render daily quests
+        function renderQuests() {
+            questListElement.innerHTML = '';
+            
+            gameState.dailyQuests.forEach(quest => {
+                const questElement = document.createElement('div');
+                questElement.className = 'quest';
+                questElement.innerHTML = `
+                    <div class="quest-icon"><i class="fas fa-seedling"></i></div>
+                    <div class="quest-info">
+                        <div class="quest-name">${quest.name}</div>
+                        <div class="quest-description">${quest.description}</div>
+                        <div class="quest-reward"><i class="fas fa-coins"></i> ${quest.reward} QC</div>
+                    </div>
+                    <div class="quest-progress">${quest.progress}/${quest.goal}</div>
+                `;
+                
+                if (quest.completed) {
+                    questElement.style.opacity = '0.6';
+                    questElement.innerHTML += '<div class="upgrade-badge">✓</div>';
+                }
+                
+                questListElement.appendChild(questElement);
+            });
+        }
+        
+        // Update quest progress
+        function updateQuestProgress(questId, amount = 1) {
+            const quest = gameState.dailyQuests.find(q => q.id === questId);
+            if (quest && !quest.completed) {
+                quest.progress += amount;
+                
+                if (quest.progress >= quest.goal) {
+                    quest.completed = true;
+                    gameState.quantumCoins += quest.reward;
+                    showNotification(`Missão concluída! +${quest.reward} Quantum Coins.`);
+                    updateStats();
+                }
+                
+                renderQuests();
+                saveGameState();
+            }
+        }
+        
+        // Handle plot click
+        function handlePlotClick(index) {
+            if (index >= gameState.plants.length) {
+                // Empty plot - open shop to buy seeds
+                openShop();
+            } else {
+                const plant = gameState.plants[index];
+                const timePassed = Math.floor((Date.now() - plant.plantedAt) / 1000);
+                
+                if (timePassed >= plant.timeRequired) {
+                    // Plant is ready - observe it
+                    observePlant(index);
+                } else {
+                    // Plant is still growing
+                    const remainingTime = plant.timeRequired - timePassed;
+                    const minutes = Math.ceil(remainingTime / 60);
+                    showNotification(`Esta planta ainda está em superposição! Volte em ${minutes} minuto(s).`);
+                }
+            }
+        }
+        
+        // Observe a plant (collapse its quantum state)
+        function observePlant(index) {
+            const plant = gameState.plants[index];
+            
+            // Determine if mutation occurs (15% base chance, increased with microscope)
+            let mutationChance = 0.15;
+            if (gameState.hasMicroscope) mutationChance += 0.15;
+            
+            // Higher chance for rare and epic seeds
+            if (plant.type === 'rare') mutationChance += 0.1;
+            if (plant.type === 'epic') mutationChance += 0.2;
+            
+            const isMutation = Math.random() < mutationChance;
+            let xpReward = 15;
+            let coinReward = 10;
+            
+            if (isMutation) {
+                // Get a random mutation
+                const mutation = plantTypes.mutations[Math.floor(Math.random() * plantTypes.mutations.length)];
+                plant.name = mutation.name;
+                plant.icon = mutation.icon;
+                plant.rarity = mutation.rarity;
+                plant.description = mutation.description;
+                
+                // Higher rewards for rarer mutations
+                if (mutation.rarity === 'rare') {
+                    xpReward = 25;
+                    coinReward = 25;
+                } else if (mutation.rarity === 'epic') {
+                    xpReward = 50;
+                    coinReward = 50;
+                } else if (mutation.rarity === 'legendary') {
+                    xpReward = 100;
+                    coinReward = 100;
+                } else if (mutation.rarity === 'mythic') {
+                    xpReward = 200;
+                    coinReward = 200;
+                }
+                
+                // Add to discovered species if new
+                if (!gameState.discoveredSpecies.includes(mutation.name)) {
+                    gameState.discoveredSpecies.push(mutation.name);
+                    updateQuestProgress(3); // Collection quest
+                    updateCollectionStats(mutation.rarity);
+                }
+                
+                // Show discovery modal
+                showDiscovery(plant, xpReward, coinReward);
+            } else {
+                // Normal evolution - just complete the plant
+                plant.icon = plant.finalIcon;
+                
+                // Add to discovered species if new
+                if (!gameState.discoveredSpecies.includes(plant.name)) {
+                    gameState.discoveredSpecies.push(plant.name);
+                    updateQuestProgress(3); // Collection quest
+                    updateCollectionStats(plant.rarity);
+                    xpReward = 30;
+                    coinReward = 20;
+                } else {
+                    xpReward = 15;
+                    coinReward = 10;
+                }
+                
+                // Add rewards
+                addXP(xpReward);
+                gameState.quantumCoins += coinReward;
+                updateQuestProgress(2); // Observation quest
+                
+                showNotification(`Planta observada! +${xpReward} XP e +${coinReward} Quantum Coins.`);
+            }
+            
+            // Update stats and save
+            updateStats();
+            saveGameState();
+            renderGarden();
+        }
+        
+        // Update collection statistics
+        function updateCollectionStats(rarity) {
+            if (gameState.collection.hasOwnProperty(rarity)) {
+                gameState.collection[rarity]++;
+            }
+            
+            // Update collection progress
+            const totalSpecies = Object.values(gameState.collection).reduce((a, b) => a + b, 0);
+            const totalPossible = 20; // Example total
+            const percent = Math.min(100, Math.round((totalSpecies / totalPossible) * 100));
+            
+            collectionPercentElement.textContent = `${percent}%`;
+            collectionProgressElement.style.width = `${percent}%`;
+            
+            // Update collection counts
+            commonCountElement.textContent = gameState.collection.common;
+            rareCountElement.textContent = gameState.collection.rare;
+            epicCountElement.textContent = gameState.collection.epic;
+            legendaryCountElement.textContent = gameState.collection.legendary;
+        }
+        
+        // Show discovery modal
+        function showDiscovery(plant, xpReward, coinReward) {
+            discoveryPlantElement.innerHTML = `<i class="${plant.icon}"></i>`;
+            discoveryNameElement.textContent = plant.name;
+            discoveryRarityElement.textContent = plant.rarity;
+            discoveryRarityElement.className = `discovery-rarity ${plant.rarity}`;
+            discoveryDescriptionElement.textContent = plant.description;
+            discoveryRewardElement.textContent = `+${xpReward} XP e +${coinReward} Quantum Coins!`;
+            discoveryModal.style.display = 'flex';
+            
+            // Add rewards
+            addXP(xpReward);
+            gameState.quantumCoins += coinReward;
+            updateQuestProgress(2); // Observation quest
+        }
+        
+        // Add XP and check for level up
+        function addXP(amount) {
+            gameState.playerXP += amount;
+            
+            if (gameState.playerXP >= gameState.xpToNextLevel) {
+                // Level up!
+                gameState.playerLevel++;
+                gameState.playerXP = gameState.playerXP - gameState.xpToNextLevel;
+                gameState.xpToNextLevel = Math.floor(gameState.xpToNextLevel * 1.5);
+                
+                showNotification(`Parabéns! Você alcançou o nível ${gameState.playerLevel}!`);
+                
+                // Reward for leveling up
+                gameState.quantumCoins += 50;
+            }
+            
+            updateStats();
+        }
+        
+        // Show notification
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.querySelector('.notification-text').textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Open shop modal
+        function openShop() {
+            renderShopItems();
+            shopModal.style.display = 'flex';
+        }
+        
+        // Close shop modal
+        function closeShopModal() {
+            shopModal.style.display = 'none';
+        }
+        
+        // Buy item from shop
+        function buyShopItem(itemId, cost) {
+            if (gameState.quantumCoins >= cost) {
+                gameState.quantumCoins -= cost;
+                
+                // Update purchase count for progressive pricing
+                gameState.purchaseCount[itemId] = (gameState.purchaseCount[itemId] || 0) + 1;
+                
+                switch(itemId) {
+                    case 'common-seed':
+                        if (gameState.plants.length < gameState.plots) {
+                            plantSeed('common');
+                            addXP(5);
+                            updateQuestProgress(1); // Planting quest
+                        } else {
+                            alert('Não há espaço no jardim! Expanda primeiro.');
+                            // Refund coins and purchase count
+                            gameState.quantumCoins += cost;
+                            gameState.purchaseCount[itemId]--;
+                        }
+                        break;
+                    case 'rare-seed':
+                        if (gameState.plants.length < gameState.plots) {
+                            plantSeed('rare');
+                            addXP(10);
+                            updateQuestProgress(1); // Planting quest
+                        } else {
+                            alert('Não há espaço no jardim! Expanda primeiro.');
+                            // Refund coins and purchase count
+                            gameState.quantumCoins += cost;
+                            gameState.purchaseCount[itemId]--;
+                        }
+                        break;
+                    case 'epic-seed':
+                        if (gameState.plants.length < gameState.plots) {
+                            plantSeed('epic');
+                            addXP(15);
+                            updateQuestProgress(1); // Planting quest
+                        } else {
+                            alert('Não há espaço no jardim! Expanda primeiro.');
+                            // Refund coins and purchase count
+                            gameState.quantumCoins += cost;
+                            gameState.purchaseCount[itemId]--;
+                        }
+                        break;
+                    case 'microscope':
+                        gameState.hasMicroscope = true;
+                        microscopeBadge.style.display = 'flex';
+                        showNotification('Microscópio adquirido! Sua chance de mutação aumentou em 15%.');
+                        addXP(20);
+                        break;
+                    case 'fertilizer':
+                        gameState.hasFertilizer = true;
+                        fertilizerBadge.style.display = 'flex';
+                        showNotification('Fertilizante adquirido! Suas plantas crescerão 30% mais rápido.');
+                        addXP(15);
+                        break;
+                    case 'expand':
+                        if (gameState.plots < gameState.maxPlots) {
+                            gameState.plots += 2;
+                            showNotification('Jardim expandido! +2 espaços para plantas.');
+                            addXP(25);
+                        } else {
+                            alert('Jardim já está no tamanho máximo!');
+                            gameState.quantumCoins += cost;
+                            gameState.purchaseCount[itemId]--;
+                        }
+                        break;
+                    case 'no-ads':
+                        gameState.adsRemoved = true;
+                        bannerAd.style.display = 'none';
+                        showNotification('Anúncios removidos! Aproveite o jogo sem interrupções.');
+                        addXP(30);
+                        break;
+                }
+                
+                updateStats();
+                saveGameState();
+                renderGarden();
+                closeShopModal();
+            } else {
+                showNotification('Quantum Coins insuficientes!');
+            }
+        }
+        
+        // Plant a seed
+        function plantSeed(type) {
+            const plantType = plantTypes[type];
+            const finalIcon = plantType.finalIcons[Math.floor(Math.random() * plantType.finalIcons.length)];
+            let timeRequired = plantType.baseTime + Math.floor(Math.random() * 60); // Add some randomness
+            
+            // Apply fertilizer effect
+            if (gameState.hasFertilizer) {
+                timeRequired = Math.floor(timeRequired * 0.7);
+            }
+            
+            const plant = {
+                name: plantType.name,
+                icon: plantType.icons[Math.floor(Math.random() * plantType.icons.length)],
+                finalIcon: finalIcon,
+                plantedAt: Date.now(),
+                timeRequired: timeRequired,
+                type: type,
+                rarity: plantType.rarity,
+                description: plantType.description
+            };
+            
+            gameState.plants.push(plant);
+            showNotification(`Semente plantada! Volte em ${Math.ceil(timeRequired / 60)} minutos.`);
+        }
+        
+        // Accelerate time for a plant (watch ad)
+        function accelerateTime() {
+            if (gameState.plants.length === 0) {
+                showNotification('Não há plantas para acelerar!');
+                return;
+            }
+            
+            if (!gameState.adsRemoved) {
+                // Show interstitial ad
+                if (showInterstitialAd()) {
+                    // Wait for ad to be closed
+                    return;
+                }
+            }
+            
+            // If ads removed or ad not shown, just accelerate
+            const acceleration = 5 * 60 * 1000; // 5 minutes in milliseconds
+            
+            gameState.plants.forEach(plant => {
+                plant.plantedAt -= acceleration;
+            });
+            
+            // Reward coins for watching ad
+            if (!gameState.adsRemoved) {
+                gameState.quantumCoins += 25;
+                addXP(5);
+                showNotification('Tempo acelerado em 5 minutos! +25 Quantum Coins.');
+            } else {
+                showNotification('Tempo acelerado em 5 minutos!');
+            }
+            
+            updateStats();
+            saveGameState();
+            renderGarden();
+        }
+        
+        // Expand garden
+        function expandGarden() {
+            const expandItem = shopItems.find(item => item.id === 'expand');
+            const purchaseCount = gameState.purchaseCount['expand'] || 0;
+            const currentPrice = expandItem.priceFormula(purchaseCount);
+            
+            if (gameState.plots < gameState.maxPlots) {
+                if (gameState.quantumCoins >= currentPrice) {
+                    gameState.quantumCoins -= currentPrice;
+                    gameState.plots += 2;
+                    gameState.purchaseCount['expand'] = purchaseCount + 1;
+                    addXP(25);
+                    
+                    updateStats();
+                    saveGameState();
+                    renderGarden();
+                    
+                    showNotification('Jardim expandido! +2 espaços para plantas.');
+                } else {
+                    showNotification(`Quantum Coins insuficientes! Expansão custa ${currentPrice} coins.`);
+                }
+            } else {
+                showNotification('Jardim já está no tamanho máximo!');
+            }
+        }
+        
+        // Update stats display
+        function updateStats() {
+            plantCountElement.textContent = gameState.plants.length;
+            speciesCountElement.textContent = gameState.discoveredSpecies.length;
+            quantumCoinsElement.textContent = gameState.quantumCoins;
+            playerLevelElement.textContent = gameState.playerLevel;
+            currentLevelElement.textContent = gameState.playerLevel;
+            currentXPElement.textContent = gameState.playerXP;
+            nextLevelXPElement.textContent = gameState.xpToNextLevel;
+            
+            // Update progress bar
+            const progressPercent = (gameState.playerXP / gameState.xpToNextLevel) * 100;
+            levelProgressElement.style.width = `${progressPercent}%`;
+            
+            // Update expand button if enough coins and space
+            const expandItem = shopItems.find(item => item.id === 'expand');
+            const purchaseCount = gameState.purchaseCount['expand'] || 0;
+            const currentPrice = expandItem.priceFormula(purchaseCount);
+            
+            if (gameState.quantumCoins >= currentPrice && gameState.plots < gameState.maxPlots) {
+                expandBtn.disabled = false;
+                expandBtn.style.opacity = '1';
+            } else {
+                expandBtn.disabled = true;
+                expandBtn.style.opacity = '0.7';
+            }
+            
+            // Update upgrade badges
+            microscopeBadge.style.display = gameState.hasMicroscope ? 'flex' : 'none';
+            fertilizerBadge.style.display = gameState.hasFertilizer ? 'flex' : 'none';
+        }
+        
+        // Check for plants that evolved while the game was closed
+        function checkForEvolvedPlants() {
+            const now = Date.now();
+            const timeAway = (now - gameState.lastVisit) / 1000; // in seconds
+            
+            if (timeAway > 10) { // Only if away for more than 10 seconds
+                let evolvedCount = 0;
+                
+                gameState.plants.forEach(plant => {
+                    const timePassed = Math.floor((now - plant.plantedAt) / 1000);
+                    if (timePassed >= plant.timeRequired) {
+                        evolvedCount++;
+                    }
+                });
+                
+                if (evolvedCount > 0) {
+                    showNotification(`Enquanto você estava fora, ${evolvedCount} planta(s) evoluíram! Observe-as para ver no que se tornaram.`);
+                }
+            }
+            
+            gameState.lastVisit = now;
+            saveGameState();
+        }
+        
+        // Set up event listeners for page visibility changes
+        function checkVisibilityChanges() {
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden) {
+                    // Page is visible again - check for evolved plants
+                    checkForEvolvedPlants();
+                    renderGarden();
+                    
+                    // Show interstitial ad occasionally when returning to the game
+                    if (Math.random() < 0.3 && !gameState.adsRemoved) {
+                        showInterstitialAd();
+                    }
+                }
+            });
+        }
+        
+        // Set up event listeners
+        function setupEventListeners() {
+            // Shop buttons
+            shopBtn.addEventListener('click', openShop);
+            closeShop.addEventListener('click', closeShopModal);
+            
+            // Shop items
+            shopItemsElement.addEventListener('click', (e) => {
+                const shopItem = e.target.closest('.shop-item');
+                if (shopItem) {
+                    const itemType = shopItem.dataset.item;
+                    const cost = parseInt(shopItem.dataset.cost);
+                    buyShopItem(itemType, cost);
+                }
+            });
+            
+            // Discovery modal
+            closeDiscovery.addEventListener('click', () => {
+                discoveryModal.style.display = 'none';
+            });
+            
+            // Accelerate button
+            accelerateBtn.addEventListener('click', accelerateTime);
+            
+            // Expand button
+            expandBtn.addEventListener('click', expandGarden);
+            
+            // Watch ad button
+            watchAdButton.addEventListener('click', () => {
+                if (!gameState.adsRemoved) {
+                    showNotification('Assistindo anúncio...');
+                    
+                    setTimeout(() => {
+                        gameState.quantumCoins += 25;
+                        updateStats();
+                        saveGameState();
+                        showNotification('+25 Quantum Coins adicionados!');
+                    }, 2000);
+                } else {
+                    showNotification('Anúncios já foram removidos!');
+                }
+            });
+            
+            // Ad event listeners
+            closeInterstitial.addEventListener('click', hideInterstitialAd);
+            continueAfterAd.addEventListener('click', hideInterstitialAd);
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === shopModal) {
+                    closeShopModal();
+                }
+                if (e.target === discoveryModal) {
+                    discoveryModal.style.display = 'none';
+                }
+                if (e.target === interstitialAd) {
+                    hideInterstitialAd();
+                }
+            });
+        }
+        
+        // Initialize the game when page loads
+        window.addEventListener('load', initGame);
+    </script>
+</body>
+</html>
